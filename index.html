@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khalil Sharaf — Project Manager</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Fira+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #080808;
+  --surface: #0e0e0e;
+  --border: rgba(255,255,255,0.08);
+  --text: #f5f5f5;
+  --text-dim: #a0a0a0;
+  --accent: #e0e0e0;
+  --accent-dim: #606060;
+}
+
+body {
+  font-family: 'Cormorant Garamond', serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 18px;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* ======================= */
+/*    LAYOUT & SECTIONS    */
+/* ======================= */
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+section {
+  margin-bottom: 5rem;
+}
+
+/* ======================= */
+/*         HEADER          */
+/* ======================= */
+
+header {
+  text-align: center;
+  padding: 2rem 0 4rem;
+}
+
+header h1 {
+  font-size: 3.5rem;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.5rem;
+}
+
+header p {
+  font-family: 'Fira Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+/* ======================= */
+/*          ABOUT          */
+/* ======================= */
+
+#about p {
+  max-width: 700px;
+  margin: 0 auto 2rem;
+  text-align: center;
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: var(--text-dim);
+}
+
+#about p strong {
+  color: var(--text);
+  font-weight: 400;
+}
+
+/* ======================= */
+/*  COMPANIES & PARTNERS  */
+/* ======================= */
+
+#companies h2 {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 3rem;
+  letter-spacing: 0.05em;
+  color: var(--text-dim);
+}
+
+.logo-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.logo-item {
+  width: 120px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: grayscale(100%) opacity(0.6);
+  transition: all 0.3s ease;
+}
+
+.logo-item:hover {
+  filter: grayscale(0%) opacity(1);
+  transform: scale(1.05);
+}
+
+.logo-item img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Ticker */
+.ticker-wrap {
+  width: 100%;
+  overflow: hidden;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 0;
+}
+
+.ticker {
+  display: flex;
+  width: fit-content;
+  animation: scroll 30s linear infinite;
+}
+
+.ticker-item {
+  font-family: 'Fira Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin: 0 3rem;
+  white-space: nowrap;
+  letter-spacing: 0.1em;
+}
+
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ======================= */
+/*       EXPERIENCE        */
+/* ======================= */
+
+#experience h2 {
+  font-size: 2rem;
+  font-weight: 400;
+  margin-bottom: 2rem;
+  letter-spacing: 0.05em;
+}
+
+.experience-item {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.experience-item:last-child {
+  border-bottom: none;
+}
+
+.experience-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.experience-header h3 {
+  font-size: 1.4rem;
+  font-weight: 400;
+}
+
+.experience-header .date {
+  font-family: 'Fira Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+.experience-item h4 {
+  font-size: 1.1rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+}
+
+.experience-item ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.experience-item li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-dim);
+}
+
+.experience-item li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--accent-dim);
+}
+
+.highlight {
+  display: inline-block;
+  background: var(--surface);
+  padding: 0.25rem 0.75rem;
+  border-radius: 3px;
+  font-family: 'Fira Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--accent);
+  margin-top: 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+/* ======================= */
+/*          SKILLS         */
+/* ======================= */
+
+#skills h2 {
+  font-size: 2rem;
+  font-weight: 400;
+  margin-bottom: 2rem;
+  letter-spacing: 0.05em;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.skill-category h3 {
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+
+.skill-category ul {
+  list-style: none;
+  padding: 0;
+}
+
+.skill-category li {
+  padding: 0.5rem 0;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+}
+
+.languages {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.language-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.language-item span:first-child {
+  font-weight: 400;
+  color: var(--text);
+}
+
+.language-item span:last-child {
+  font-family: 'Fira Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+/* ======================= */
+/*        EDUCATION        */
+/* ======================= */
+
+#education h2 {
+  font-size: 2rem;
+  font-weight: 400;
+  margin-bottom: 2rem;
+  letter-spacing: 0.05em;
+}
+
+.education-item {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.education-item .date {
+  font-family: 'Fira Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--accent-dim);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+.education-item h3 {
+  font-size: 1.3rem;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+}
+
+.education-item p {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+}
+
+/* ======================= */
+/*         FOOTER          */
+/* ======================= */
+
+footer {
+  text-align: center;
+  padding: 3rem 0;
+  border-top: 1px solid var(--border);
+  margin-top: 5rem;
+}
+
+footer p {
+  font-family: 'Fira Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+/* ======================= */
+/*     MOBILE STYLES       */
+/* ======================= */
+
+@media (max-width: 768px) {
+  header h1 { font-size: 2.5rem; }
+  
+  #about p { font-size: 1rem; }
+  
+  .logo-grid { gap: 1.5rem; }
+  
+  .logo-item {
+    width: 90px;
+    height: 45px;
+  }
+  
+  .experience-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 16px; }
+  
+  header h1 { font-size: 2rem; }
+  
+  .container { padding: 2rem 1rem; }
+  
+  section { margin-bottom: 3rem; }
+  
+  .logo-item {
+    width: 80px;
+    height: 40px;
+  }
+}
+
+/* ======================= */
+/*      ACCESSIBILITY      */
+/* ======================= */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <header>
+    <h1>Khalil Sharaf</h1>
+    <p>Project Manager — Content & Localization</p>
+  </header>
+
+  <!-- About -->
+  <section id="about">
+    <p>
+      Three years delivering <strong>digital & media products</strong> at the intersection of technology, content, and analytics.
+    </p>
+    <p>
+      I operate where technical requirements meet creative execution — coordinating cross-functional teams, defining product roadmaps, and integrating AI-driven workflows that compress timelines without sacrificing quality. Native Arabic, fluent in English and Russian; I bridge cultures as naturally as I bridge departments.
+    </p>
+  </section>
+
+  <!-- Companies & Partners -->
+  <section id="companies">
+    <h2>Companies & Partners</h2>
+    
+    <div class="logo-grid">
+      <div class="logo-item">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/58/Yandex_icon.svg" alt="Yandex">
+      </div>
+      <div class="logo-item">
+        <img src="https://avatars.githubusercontent.com/u/80028440?s=200&v=4" alt="Kinopoisk">
+      </div>
+      <div class="logo-item">
+        <img src="https://pbs.twimg.com/profile_images/1624737935898402817/tFvHTbVv_400x400.jpg" alt="Yango Play">
+      </div>
+      <div class="logo-item">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Crunchyroll_Logo.png" alt="Crunchyroll">
+      </div>
+      <div class="logo-item">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTOZEGjxsS3H6_J5p0Z-rZqAZZGXXHCYU-Aw&s" alt="RuFilms">
+      </div>
+    </div>
+
+    <!-- Ticker -->
+    <div class="ticker-wrap">
+      <div class="ticker">
+        <span class="ticker-item">Yandex</span>
+        <span class="ticker-item">Kinopoisk</span>
+        <span class="ticker-item">Yango Play</span>
+        <span class="ticker-item">Crunchyroll</span>
+        <span class="ticker-item">RuFilms</span>
+        <span class="ticker-item">Yandex</span>
+        <span class="ticker-item">Kinopoisk</span>
+        <span class="ticker-item">Yango Play</span>
+        <span class="ticker-item">Crunchyroll</span>
+        <span class="ticker-item">RuFilms</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section id="experience">
+    <h2>Experience</h2>
+
+    <div class="experience-item">
+      <div class="experience-header">
+        <h3>Yandex</h3>
+        <span class="date">2023 — present</span>
+      </div>
+      <h4>Project Manager, Content & Localization</h4>
+      <ul>
+        <li>Led cross-regional coordination with Middle Eastern studios and global content partners</li>
+        <li>Owned end-to-end technical and editorial requirements for international releases</li>
+        <li>Delivered high-profile titles for Kinopoisk, Yango Play, Sony, Crunchyroll, HBO, Starz Play</li>
+        <li>Introduced AI-assisted tools into editorial workflows, improving turnaround time and consistency</li>
+      </ul>
+    </div>
+
+    <div class="experience-item">
+      <div class="experience-header">
+        <h3>Kareta</h3>
+        <span class="date">Jul 2025 — Jan 2026</span>
+      </div>
+      <h4>Founder</h4>
+      <ul>
+        <li>Founded a ride-hailing service and managed the complete operational workflow</li>
+        <li>Led the startup to become a finalist in the MIPT acceleration program</li>
+      </ul>
+      <span class="highlight">MIPT Acceleration Finalist · 2025</span>
+    </div>
+
+    <div class="experience-item">
+      <div class="experience-header">
+        <h3>Merlin Clone</h3>
+        <span class="date">Jan — Jul 2025</span>
+      </div>
+      <h4>AI VoiceOver Specialist</h4>
+      <ul>
+        <li>Enhanced AI-driven VoiceOver technology for film and video productions</li>
+      </ul>
+    </div>
+
+    <div class="experience-item">
+      <div class="experience-header">
+        <h3>RuFilms LLC</h3>
+        <span class="date">2019 — 2022</span>
+      </div>
+      <h4>Localization Manager</h4>
+      <ul>
+        <li>Managed content localization for the MENA region</li>
+        <li>Translated complex medical lectures for Qatar University</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills">
+    <h2>Skills</h2>
+    
+    <div class="skills-grid">
+      <div class="skill-category">
+        <h3>Product & Management</h3>
+        <ul>
+          <li>Product Strategy</li>
+          <li>Roadmap Planning</li>
+          <li>Stakeholder Management</li>
+          <li>Agile / Scrum</li>
+          <li>Cross-functional Coordination</li>
+          <li>Risk Assessment</li>
+        </ul>
+      </div>
+
+      <div class="skill-category">
+        <h3>Data & Design</h3>
+        <ul>
+          <li>SQL / Data Analysis</li>
+          <li>Tableau / Looker</li>
+          <li>Figma / Wireframing</li>
+          <li>User Research</li>
+          <li>A/B Testing</li>
+          <li>Metrics & KPIs</li>
+        </ul>
+      </div>
+
+      <div class="skill-category">
+        <h3>Soft Skills</h3>
+        <ul>
+          <li>Communication</li>
+          <li>Negotiation</li>
+          <li>Problem Solving</li>
+          <li>Critical Thinking</li>
+          <li>Adaptability</li>
+          <li>Leadership</li>
+        </ul>
+      </div>
+
+      <div class="skill-category">
+        <h3>Languages</h3>
+        <div class="languages">
+          <div class="language-item">
+            <span>Arabic</span>
+            <span>Native</span>
+          </div>
+          <div class="language-item">
+            <span>English</span>
+            <span>C2 · Proficient</span>
+          </div>
+          <div class="language-item">
+            <span>Russian</span>
+            <span>C2 · Proficient</span>
+          </div>
+          <div class="language-item">
+            <span>Chinese</span>
+            <span>A1 · Beginner</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Education -->
+  <section id="education">
+    <h2>Education</h2>
+
+    <div class="education-item">
+      <div class="date">2025 — 2027</div>
+      <h3>MSc Business Informatics, IT Product Management</h3>
+      <p>Moscow Institute of Physics and Technology</p>
+    </div>
+
+    <div class="education-item">
+      <div class="date">2019 — 2023</div>
+      <h3>Bachelor's in Linguistics</h3>
+      <p>Peter the Great St. Petersburg Polytechnic University</p>
+    </div>
+
+    <div class="education-item">
+      <div class="date">2024 — 2025</div>
+      <h3>Professional Training in Data Analytics</h3>
+      <p>Skypro</p>
+    </div>
+  </section>
+
+</div>
+
+<!-- Footer -->
+<footer>
+  <p>© 2026 Khalil Sharaf · Built with care</p>
+</footer>
+
+</body>
+</html>
