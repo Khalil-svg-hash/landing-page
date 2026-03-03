@@ -11,618 +11,779 @@
 :root {
   --bg: #080808;
   --surface: #0e0e0e;
-  --border: rgba(255,255,255,0.08);
-  --text: #f5f5f5;
-  --text-dim: #a0a0a0;
-  --accent: #e0e0e0;
-  --accent-dim: #606060;
+  --border: rgba(255,255,255,0.06);
+  --text: #e8e2d6;
+  --muted: #7a7570;
+  --accent: #c8a96e;
+  --accent2: #6e9ec8;
 }
 
+html { scroll-behavior: smooth; }
+
 body {
-  font-family: 'Cormorant Garamond', serif;
   background: var(--bg);
   color: var(--text);
-  line-height: 1.7;
+  font-family: 'Cormorant Garamond', Georgia, serif;
   font-size: 18px;
+  line-height: 1.7;
   overflow-x: hidden;
 }
 
-a { color: inherit; text-decoration: none; }
+.glass-filter-container { display: none; }
 
-button {
-  font-family: inherit;
-  cursor: pointer;
-  border: none;
-  background: none;
-}
-
-/* ======================= */
-/*    LAYOUT & SECTIONS    */
-/* ======================= */
-
-.container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 3rem 1.5rem;
-}
-
-section {
-  margin-bottom: 5rem;
-}
-
-/* ======================= */
-/*         HEADER          */
-/* ======================= */
-
-header {
-  text-align: center;
-  padding: 2rem 0 4rem;
-}
-
-header h1 {
-  font-size: 3.5rem;
-  font-weight: 300;
-  letter-spacing: 0.03em;
-  margin-bottom: 0.5rem;
-}
-
-header p {
-  font-family: 'Fira Mono', monospace;
-  font-size: 0.9rem;
-  color: var(--text-dim);
-  letter-spacing: 0.05em;
-}
-
-/* ======================= */
-/*          ABOUT          */
-/* ======================= */
-
-#about p {
-  max-width: 700px;
-  margin: 0 auto 2rem;
-  text-align: center;
-  font-size: 1.15rem;
-  line-height: 1.8;
-  color: var(--text-dim);
-}
-
-#about p strong {
-  color: var(--text);
-  font-weight: 400;
-}
-
-/* ======================= */
-/*  COMPANIES & PARTNERS  */
-/* ======================= */
-
-#companies h2 {
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: 400;
-  margin-bottom: 3rem;
-  letter-spacing: 0.05em;
-  color: var(--text-dim);
-}
-
-.logo-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2.5rem;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 3rem;
-}
-
-.logo-item {
-  width: 120px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  filter: grayscale(100%) opacity(0.6);
-  transition: all 0.3s ease;
-}
-
-.logo-item:hover {
-  filter: grayscale(0%) opacity(1);
-  transform: scale(1.05);
-}
-
-.logo-item img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
-
-/* Ticker */
-.ticker-wrap {
-  width: 100%;
+.glass {
+  position: relative;
   overflow: hidden;
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  padding: 1rem 0;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 2.2);
+  box-shadow: 0 6px 6px rgba(0,0,0,0.25), 0 0 20px rgba(0,0,0,0.15);
+}
+.glass-blur {
+  position: absolute; inset: 0; z-index: 0;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  filter: url(#glass-distortion);
+  isolation: isolate;
+  border-radius: inherit;
+}
+.glass-tint {
+  position: absolute; inset: 0; z-index: 1;
+  background: rgba(255,255,255,0.12);
+  border-radius: inherit;
+}
+.glass-shine {
+  position: absolute; inset: 0; z-index: 2;
+  border-radius: inherit;
+  box-shadow: inset 2px 2px 1px rgba(255,255,255,0.45),
+              inset -1px -1px 1px rgba(255,255,255,0.3);
+}
+.glass-content {
+  position: relative; z-index: 3;
 }
 
-.ticker {
+.nav-bar {
+  position: fixed;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  border-radius: 9999px;
+  opacity: 0;
+  animation: fadeDown 1s cubic-bezier(0.16,1,0.3,1) 1.2s forwards;
+  overflow: hidden;
+}
+.nav-bar .glass-blur { border-radius: 9999px; }
+.nav-bar .glass-tint { background: rgba(8,8,8,0.45); }
+.nav-bar .glass-shine { border-radius: 9999px; box-shadow: inset 1px 1px 1px rgba(255,255,255,0.15), inset -1px -1px 1px rgba(255,255,255,0.08); }
+.nav-inner {
   display: flex;
-  width: fit-content;
-  animation: scroll 30s linear infinite;
+  gap: 0.25rem;
+  padding: 0.5rem 1rem;
+  align-items: center;
+  position: relative;
 }
-
-.ticker-item {
+.nav-bar-glow {
+  position: absolute;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,169,110,0.45) 0%, transparent 65%);
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.4s ease-out, opacity 0.3s;
+  opacity: 0;
+  z-index: 0;
+  top: 50%; left: 50%;
+}
+.nav-bar:hover .nav-bar-glow {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+.nav-link {
   font-family: 'Fira Mono', monospace;
-  font-size: 0.85rem;
-  color: var(--text-dim);
-  margin: 0 3rem;
-  white-space: nowrap;
-  letter-spacing: 0.1em;
-}
-
-@keyframes scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-/* ======================= */
-/*       EXPERIENCE        */
-/* ======================= */
-
-#experience h2 {
-  font-size: 2rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 9999px;
+  transition: color 0.3s;
   font-weight: 400;
-  margin-bottom: 2rem;
-  letter-spacing: 0.05em;
+  position: relative;
+  z-index: 1;
+}
+.nav-link:hover { color: var(--accent); }
+.nav-dot {
+  width: 3px; height: 3px; border-radius: 50%;
+  background: var(--border);
 }
 
-.experience-item {
-  margin-bottom: 3rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid var(--border);
+#hero {
+  position: relative;
+  height: 100vh;
+  min-height: 600px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
 }
-
-.experience-item:last-child {
-  border-bottom: none;
+#shader-canvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  opacity: 0.55;
 }
-
-.experience-header {
+.hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(8,8,8,0.2) 0%, rgba(8,8,8,0.1) 40%, rgba(8,8,8,0.9) 100%);
+}
+.hero-content {
+  position: relative; z-index: 2;
+  padding: 0 8vw 7vh;
+  width: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  align-items: flex-end;
 }
-
-.experience-header h3 {
-  font-size: 1.4rem;
-  font-weight: 400;
-}
-
-.experience-header .date {
-  font-family: 'Fira Mono', monospace;
-  font-size: 0.85rem;
-  color: var(--text-dim);
-  letter-spacing: 0.05em;
-}
-
-.experience-item h4 {
-  font-size: 1.1rem;
+.hero-name {
+  font-size: clamp(3.5rem, 9vw, 8rem);
   font-weight: 300;
-  font-style: italic;
-  color: var(--text-dim);
-  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+  opacity: 0;
+  animation: fadeUp 1.2s cubic-bezier(0.16,1,0.3,1) 0.3s forwards;
 }
+.hero-name em { font-style: italic; color: var(--accent); }
 
-.experience-item ul {
-  list-style: none;
-  padding-left: 0;
+.hero-badge {
+  border-radius: 1.25rem;
+  opacity: 0;
+  animation: fadeUp 1.2s cubic-bezier(0.16,1,0.3,1) 0.6s forwards;
 }
-
-.experience-item li {
-  position: relative;
-  padding-left: 1.5rem;
-  margin-bottom: 0.75rem;
-  color: var(--text-dim);
+.hero-badge .glass-blur { border-radius: 1.25rem; }
+.hero-badge .glass-tint { background: rgba(8,8,8,0.4); }
+.hero-badge .glass-shine { border-radius: 1.25rem; box-shadow: inset 1px 1px 1px rgba(255,255,255,0.15), inset -1px -1px 1px rgba(255,255,255,0.08); }
+.hero-badge .glass-content {
+  padding: 1.25rem 1.75rem;
+  text-align: right;
 }
-
-.experience-item li::before {
-  content: '—';
-  position: absolute;
-  left: 0;
-  color: var(--accent-dim);
-}
-
-.highlight {
-  display: inline-block;
-  background: var(--surface);
-  padding: 0.25rem 0.75rem;
-  border-radius: 3px;
+.hero-title {
   font-family: 'Fira Mono', monospace;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
   color: var(--accent);
-  margin-top: 0.5rem;
-  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+.hero-location {
+  font-family: 'Fira Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
 }
 
-/* ======================= */
-/*          SKILLS         */
-/* ======================= */
-
-#skills h2 {
-  font-size: 2rem;
-  font-weight: 400;
-  margin-bottom: 2rem;
-  letter-spacing: 0.05em;
-}
-
-.skills-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-}
-
-.skill-category h3 {
-  font-size: 1.2rem;
-  font-weight: 400;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 0.5rem;
-}
-
-.skill-category ul {
-  list-style: none;
-  padding: 0;
-}
-
-.skill-category li {
-  padding: 0.5rem 0;
-  color: var(--text-dim);
-  font-size: 0.95rem;
-}
-
-.languages {
+.scroll-hint {
+  position: absolute;
+  bottom: 2rem; left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  opacity: 0;
+  animation: fadeIn 1s ease 2s forwards;
+  font-family: 'Fira Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  text-transform: uppercase;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-}
-
-.language-item {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 0.5rem;
 }
-
-.language-item span:first-child {
-  font-weight: 400;
-  color: var(--text);
+.scroll-line {
+  width: 1px; height: 40px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scrollPulse 2s ease infinite;
 }
+@keyframes scrollPulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
 
-.language-item span:last-child {
+main { max-width: 1200px; margin: 0 auto; padding: 0 8vw; }
+
+.about-strip {
+  padding: 8vh 0 6vh;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 4rem;
+  border-bottom: 1px solid var(--border);
+}
+.photo-wrap { position: relative; width: 260px; }
+.photo-wrap img {
+  width: 260px; max-width: 260px;
+  aspect-ratio: 3/4; object-fit: cover; object-position: top;
+  filter: grayscale(15%) contrast(1.05);
+  display: block;
+}
+.photo-frame {
+  position: absolute;
+  inset: 12px -12px -12px 12px;
+  border: 1px solid var(--accent);
+  opacity: 0.25;
+  pointer-events: none;
+  border-radius: 2px;
+}
+.about-text { padding-top: 1rem; }
+
+.section-label {
   font-family: 'Fira Mono', monospace;
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  letter-spacing: 0.05em;
+  font-size: 0.62rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.section-label::after {
+  content: ''; display: block;
+  height: 1px; width: 40px;
+  background: var(--accent); opacity: 0.4;
+}
+.about-lead {
+  font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+  font-weight: 300; line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+.about-lead strong { font-weight: 600; color: var(--accent); }
+.about-body { font-size: 0.95rem; color: var(--muted); line-height: 1.9; }
+
+.experience-section { padding: 7vh 0; border-bottom: 1px solid var(--border); }
+.exp-grid { margin-top: 3rem; }
+.exp-item {
+  display: grid; grid-template-columns: 180px 1fr;
+  gap: 2rem; padding: 2.5rem 0;
+  border-top: 1px solid var(--border);
+}
+.exp-company {
+  font-family: 'Fira Mono', monospace; font-size: 0.75rem;
+  letter-spacing: 0.1em; color: var(--text);
+  text-transform: uppercase; margin-bottom: 0.4rem;
+  transition: color 0.3s;
+}
+.exp-item:hover .exp-company { color: var(--accent); }
+.exp-period { font-family: 'Fira Mono', monospace; font-size: 0.62rem; color: var(--muted); }
+.exp-role { font-size: 1.3rem; font-weight: 400; font-style: italic; margin-bottom: 1rem; }
+.exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+.exp-bullets li {
+  font-size: 0.92rem; color: var(--muted);
+  padding-left: 1.2rem; position: relative; line-height: 1.6;
+}
+.exp-bullets li::before {
+  content: '→'; position: absolute; left: 0;
+  color: var(--accent); font-size: 0.75rem; opacity: 0.7;
 }
 
-/* ======================= */
-/*        EDUCATION        */
-/* ======================= */
-
-#education h2 {
-  font-size: 2rem;
-  font-weight: 400;
-  margin-bottom: 2rem;
-  letter-spacing: 0.05em;
+.skills-section {
+  padding: 7vh 0; border-bottom: 1px solid var(--border);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
 }
-
-.education-item {
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 4px;
+.skill-category { margin-bottom: 2rem; }
+.skill-cat-label {
+  font-family: 'Fira Mono', monospace; font-size: 0.58rem;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.9rem;
 }
+.skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 
-.education-item .date {
+.glass-tag {
+  border-radius: 0.5rem;
   font-family: 'Fira Mono', monospace;
-  font-size: 0.85rem;
-  color: var(--accent-dim);
-  margin-bottom: 0.5rem;
-  letter-spacing: 0.05em;
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
+}
+.glass-tag:hover { color: var(--accent); transform: translateY(-1px); }
+.glass-tag .glass-blur { border-radius: 0.5rem; }
+.glass-tag .glass-tint { background: rgba(255,255,255,0.04); }
+.glass-tag .glass-shine { border-radius: 0.5rem; box-shadow: inset 1px 1px 1px rgba(255,255,255,0.1), inset -1px -1px 1px rgba(255,255,255,0.06); }
+.glass-tag .glass-content { padding: 0.3rem 0.75rem; }
+
+.lang-list { display: flex; flex-direction: column; gap: 0; margin-top: 0.5rem; }
+.lang-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1rem 0; border-bottom: 1px solid var(--border);
+}
+.lang-name { font-size: 1.1rem; font-weight: 300; }
+.lang-level {
+  font-family: 'Fira Mono', monospace; font-size: 0.58rem;
+  letter-spacing: 0.18em; color: var(--accent); text-transform: uppercase;
 }
 
-.education-item h3 {
-  font-size: 1.3rem;
-  font-weight: 400;
-  margin-bottom: 0.5rem;
+.edu-section { padding: 7vh 0; border-bottom: 1px solid var(--border); }
+.edu-grid { margin-top: 3rem; }
+.edu-item {
+  display: grid; grid-template-columns: 180px 1fr;
+  gap: 2rem; padding: 1.75rem 0; border-top: 1px solid var(--border);
 }
+.edu-year { font-family: 'Fira Mono', monospace; font-size: 0.62rem; color: var(--muted); padding-top: 0.3rem; }
+.edu-degree { font-size: 1.1rem; font-style: italic; margin-bottom: 0.3rem; }
+.edu-institution { font-family: 'Fira Mono', monospace; font-size: 0.65rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
 
-.education-item p {
-  color: var(--text-dim);
-  font-size: 0.95rem;
+.contact-section { padding: 9vh 0 10vh; text-align: center; }
+.contact-headline {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 300; margin-bottom: 3.5rem; line-height: 1.2;
 }
+.contact-headline em { font-style: italic; color: var(--accent); }
 
-/* ======================= */
-/*         FOOTER          */
-/* ======================= */
+.contact-links { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+
+.glass-contact-card {
+  border-radius: 1.25rem;
+  text-decoration: none; color: var(--text);
+  min-width: 180px;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 2.2);
+}
+.glass-contact-card:hover { transform: translateY(-4px); color: var(--accent); }
+.glass-contact-card .glass-blur { border-radius: 1.25rem; }
+.glass-contact-card .glass-tint { background: rgba(200,169,110,0.06); }
+.glass-contact-card .glass-shine { border-radius: 1.25rem; box-shadow: inset 1px 1px 1px rgba(200,169,110,0.2), inset -1px -1px 1px rgba(255,255,255,0.06); }
+.glass-contact-card .glass-content {
+  padding: 1.75rem 2rem;
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+}
+.contact-link-label {
+  font-family: 'Fira Mono', monospace; font-size: 0.58rem;
+  letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted);
+}
+.glass-contact-card:hover .contact-link-label { color: var(--accent); opacity: 0.7; }
+.contact-link-value { font-size: 0.95rem; font-style: italic; }
 
 footer {
-  text-align: center;
-  padding: 3rem 0;
   border-top: 1px solid var(--border);
-  margin-top: 5rem;
+  padding: 2rem 8vw;
+  display: flex; justify-content: space-between; align-items: center;
 }
+.footer-name { font-family: 'Fira Mono', monospace; font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; }
+.footer-year { font-family: 'Fira Mono', monospace; font-size: 0.6rem; color: var(--muted); }
 
-footer p {
+@keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeDown { from{opacity:0;transform:translateX(-50%) translateY(-12px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+.reveal { opacity:0; transform:translateY(22px); transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1); }
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+.slider-section {
+  padding: 5vh 0;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+.slider-label {
   font-family: 'Fira Mono', monospace;
-  font-size: 0.85rem;
-  color: var(--text-dim);
-  letter-spacing: 0.05em;
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 2.5rem;
 }
-
-/* ======================= */
-/*     MOBILE STYLES       */
-/* ======================= */
+.slider-track-outer {
+  overflow: hidden;
+  width: 100%;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+}
+.slider-track {
+  display: flex;
+  width: max-content;
+  gap: 4rem;
+  align-items: center;
+  animation: sliderScroll 28s linear infinite;
+}
+.slider-track:hover { animation-play-state: paused; }
+@keyframes sliderScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.slider-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  flex-shrink: 0;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+  cursor: default;
+}
+.slider-item:hover { opacity: 1; }
+.slider-item img {
+  height: 48px;
+  width: auto;
+  max-width: 120px;
+  object-fit: contain;
+  filter: grayscale(100%) brightness(1.8);
+  transition: filter 0.3s;
+}
+.slider-item:hover img { filter: grayscale(0%) brightness(1); }
+.slider-item-name {
+  font-family: 'Fira Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.kareta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding: 0.35rem 0.9rem 0.35rem 0.6rem;
+  border: 1px solid rgba(200,169,110,0.25);
+  border-radius: 9999px;
+  font-family: 'Fira Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.kareta-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 2s ease infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
 
 @media (max-width: 768px) {
-  header h1 { font-size: 2.5rem; }
-  
-  #about p { font-size: 1rem; }
-  
-  .logo-grid { gap: 1.5rem; }
-  
-  .logo-item {
-    width: 90px;
-    height: 45px;
-  }
-  
-  .experience-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .skills-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 480px) {
-  body { font-size: 16px; }
-  
-  header h1 { font-size: 2rem; }
-  
-  .container { padding: 2rem 1rem; }
-  
-  section { margin-bottom: 3rem; }
-  
-  .logo-item {
-    width: 80px;
-    height: 40px;
-  }
-}
-
-/* ======================= */
-/*      ACCESSIBILITY      */
-/* ======================= */
-
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
+  .about-strip, .skills-section { grid-template-columns: 1fr; gap: 2.5rem; }
+  .exp-item, .edu-item { grid-template-columns: 1fr; gap: 0.5rem; }
+  .hero-content { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .nav-inner { gap: 0; }
+  .nav-link { padding: 0.4rem 0.5rem; font-size: 0.55rem; }
+  footer { flex-direction: column; gap: 0.5rem; }
+  .contact-links { gap: 1rem; }
+  .glass-contact-card { min-width: 140px; }
 }
 </style>
 </head>
 <body>
 
-<div class="container">
+<div class="glass-filter-container">
+<svg xmlns="http://www.w3.org/2000/svg">
+  <defs>
+  <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox">
+    <feTurbulence type="fractalNoise" baseFrequency="0.001 0.005" numOctaves="1" seed="17" result="turbulence"/>
+    <feComponentTransfer in="turbulence" result="mapped">
+      <feFuncR type="gamma" amplitude="1" exponent="10" offset="0.5"/>
+      <feFuncG type="gamma" amplitude="0" exponent="1" offset="0"/>
+      <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5"/>
+    </feComponentTransfer>
+    <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap"/>
+    <feSpecularLighting in="softMap" surfaceScale="5" specularConstant="1" specularExponent="100" lightingColor="white" result="specLight">
+      <fePointLight x="-200" y="-200" z="300"/>
+    </feSpecularLighting>
+    <feComposite in="specLight" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="litImage"/>
+    <feDisplacementMap in="SourceGraphic" in2="softMap" scale="200" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  </defs>
+</svg>
+</div>
 
-  <!-- Header -->
-  <header>
-    <h1>Khalil Sharaf</h1>
-    <p>Project Manager — Content & Localization</p>
-  </header>
+<nav>
+  <div class="nav-bar glass">
+    <div class="glass-blur"></div>
+    <div class="glass-tint"></div>
+    <div class="glass-shine"></div>
+    <div class="glass-content">
+      <div class="nav-inner">
+        <div class="nav-bar-glow"></div>
+        <a href="#about" class="nav-link">About</a>
+        <div class="nav-dot"></div>
+        <a href="#experience" class="nav-link">Experience</a>
+        <div class="nav-dot"></div>
+        <a href="#skills" class="nav-link">Skills</a>
+        <div class="nav-dot"></div>
+        <a href="#contact" class="nav-link">Contact</a>
+      </div>
+    </div>
+  </div>
+</nav>
 
-  <!-- About -->
-  <section id="about">
-    <p>
-      Three years delivering <strong>digital & media products</strong> at the intersection of technology, content, and analytics.
-    </p>
-    <p>
-      I operate where technical requirements meet creative execution — coordinating cross-functional teams, defining product roadmaps, and integrating AI-driven workflows that compress timelines without sacrificing quality. Native Arabic, fluent in English and Russian; I bridge cultures as naturally as I bridge departments.
-    </p>
+<section id="hero">
+  <canvas id="shader-canvas"></canvas>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1 class="hero-name"><em>Khalil</em><br>Sharaf</h1>
+    <div class="hero-badge glass">
+      <div class="glass-blur"></div>
+      <div class="glass-tint"></div>
+      <div class="glass-shine"></div>
+      <div class="glass-content">
+        <div class="hero-title">Project Manager</div>
+        <div class="hero-location">Moscow · Open to relocation</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<main>
+
+  <div class="about-strip reveal" id="about">
+    <div class="photo-wrap">
+      <img src="https://avatars.githubusercontent.com/u/Khalil-svg-hash" alt="Khalil Sharaf" />
+      <div class="photo-frame"></div>
+    </div>
+    <div class="about-text">
+      <div class="section-label">About</div>
+      <p class="about-lead">
+        Three years delivering <strong>digital &amp; media products</strong> at the intersection of technology, content, and analytics.
+      </p>
+      <p class="about-body">
+        I operate where technical requirements meet creative execution — coordinating cross-functional teams, defining product roadmaps, and integrating AI-driven workflows that compress timelines without sacrificing quality. Native Arabic, fluent in English and Russian; I bridge cultures as naturally as I bridge departments.
+      </p>
+    </div>
+  </div>
+
+  <div class="slider-section reveal">
+    <p class="slider-label">Companies &amp; Partners</p>
+    <div class="slider-track-outer">
+      <div class="slider-track">
+        <div class="slider-item">
+          <span class="slider-item-name">Yandex</span>
+        </div>
+        <div class="slider-item">
+          <span class="slider-item-name">Kareta</span>
+        </div>
+        <div class="slider-item">
+          <span class="slider-item-name">Partner 3</span>
+        </div>
+        <div class="slider-item">
+          <span class="slider-item-name">Partner 4</span>
+        </div>
+        <!-- duplicate for infinite loop -->
+        <div class="slider-item">
+          <span class="slider-item-name">Yandex</span>
+        </div>
+        <div class="slider-item">
+          <span class="slider-item-name">Kareta</span>
+        </div>
+        <div class="slider-item">
+          <span class="slider-item-name">Partner 3</span>
+        </div>
+        <div class="slider-item">
+          <span class="slider-item-name">Partner 4</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="experience-section reveal" id="experience">
+    <div class="section-label">Experience</div>
+    <div class="exp-grid">
+
+      <div class="exp-item">
+        <div>
+          <div class="exp-company">Kareta</div>
+          <div class="exp-period">2023 — Present</div>
+          <div class="kareta-badge"><span class="kareta-dot"></span> Current</div>
+        </div>
+        <div>
+          <div class="exp-role">Project Manager, Digital Products</div>
+          <ul class="exp-bullets">
+            <li>Led end-to-end delivery of a multi-platform media suite, reducing time-to-market by 30%.</li>
+            <li>Defined and maintained the product roadmap across engineering, design, and content teams.</li>
+            <li>Implemented AI-assisted content workflows, cutting production cycles by 40%.</li>
+            <li>Coordinated a 12-person cross-functional team using Agile/Scrum methodologies.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div>
+          <div class="exp-company">Yandex</div>
+          <div class="exp-period">2021 — 2023</div>
+        </div>
+        <div>
+          <div class="exp-role">Associate Product Manager</div>
+          <ul class="exp-bullets">
+            <li>Contributed to growth initiatives for a core search product with 50M+ monthly users.</li>
+            <li>Ran A/B experiments that improved key engagement metrics by 18%.</li>
+            <li>Worked with analytics and data science teams to translate insights into product decisions.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
   </section>
 
-  <!-- Companies & Partners -->
-  <section id="companies">
-    <h2>Companies & Partners</h2>
-    
-    <div class="logo-grid">
-      <div class="logo-item">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/5/58/Yandex_icon.svg" alt="Yandex">
-      </div>
-      <div class="logo-item">
-        <img src="https://avatars.githubusercontent.com/u/80028440?s=200&v=4" alt="Kinopoisk">
-      </div>
-      <div class="logo-item">
-        <img src="https://pbs.twimg.com/profile_images/1624737935898402817/tFvHTbVv_400x400.jpg" alt="Yango Play">
-      </div>
-      <div class="logo-item">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Crunchyroll_Logo.png" alt="Crunchyroll">
-      </div>
-      <div class="logo-item">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTOZEGjxsS3H6_J5p0Z-rZqAZZGXXHCYU-Aw&s" alt="RuFilms">
-      </div>
-    </div>
-
-    <!-- Ticker -->
-    <div class="ticker-wrap">
-      <div class="ticker">
-        <span class="ticker-item">Yandex</span>
-        <span class="ticker-item">Kinopoisk</span>
-        <span class="ticker-item">Yango Play</span>
-        <span class="ticker-item">Crunchyroll</span>
-        <span class="ticker-item">RuFilms</span>
-        <span class="ticker-item">Yandex</span>
-        <span class="ticker-item">Kinopoisk</span>
-        <span class="ticker-item">Yango Play</span>
-        <span class="ticker-item">Crunchyroll</span>
-        <span class="ticker-item">RuFilms</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Experience -->
-  <section id="experience">
-    <h2>Experience</h2>
-
-    <div class="experience-item">
-      <div class="experience-header">
-        <h3>Yandex</h3>
-        <span class="date">2023 — present</span>
-      </div>
-      <h4>Project Manager, Content & Localization</h4>
-      <ul>
-        <li>Led cross-regional coordination with Middle Eastern studios and global content partners</li>
-        <li>Owned end-to-end technical and editorial requirements for international releases</li>
-        <li>Delivered high-profile titles for Kinopoisk, Yango Play, Sony, Crunchyroll, HBO, Starz Play</li>
-        <li>Introduced AI-assisted tools into editorial workflows, improving turnaround time and consistency</li>
-      </ul>
-    </div>
-
-    <div class="experience-item">
-      <div class="experience-header">
-        <h3>Kareta</h3>
-        <span class="date">Jul 2025 — Jan 2026</span>
-      </div>
-      <h4>Founder</h4>
-      <ul>
-        <li>Founded a ride-hailing service and managed the complete operational workflow</li>
-        <li>Led the startup to become a finalist in the MIPT acceleration program</li>
-      </ul>
-      <span class="highlight">MIPT Acceleration Finalist · 2025</span>
-    </div>
-
-    <div class="experience-item">
-      <div class="experience-header">
-        <h3>Merlin Clone</h3>
-        <span class="date">Jan — Jul 2025</span>
-      </div>
-      <h4>AI VoiceOver Specialist</h4>
-      <ul>
-        <li>Enhanced AI-driven VoiceOver technology for film and video productions</li>
-      </ul>
-    </div>
-
-    <div class="experience-item">
-      <div class="experience-header">
-        <h3>RuFilms LLC</h3>
-        <span class="date">2019 — 2022</span>
-      </div>
-      <h4>Localization Manager</h4>
-      <ul>
-        <li>Managed content localization for the MENA region</li>
-        <li>Translated complex medical lectures for Qatar University</li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- Skills -->
-  <section id="skills">
-    <h2>Skills</h2>
-    
-    <div class="skills-grid">
+  <section class="skills-section reveal" id="skills">
+    <div>
+      <div class="section-label">Skills</div>
       <div class="skill-category">
-        <h3>Product & Management</h3>
-        <ul>
-          <li>Product Strategy</li>
-          <li>Roadmap Planning</li>
-          <li>Stakeholder Management</li>
-          <li>Agile / Scrum</li>
-          <li>Cross-functional Coordination</li>
-          <li>Risk Assessment</li>
-        </ul>
+        <div class="skill-cat-label">Product &amp; Delivery</div>
+        <div class="skill-tags">
+          <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">Agile / Scrum</div></div>
+          <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">Product Roadmap</div></div>
+          <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">A/B Testing</div></div>
+          <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">OKRs / KPIs</div></div>
+          <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">Stakeholder Mgmt</div></div>
+        </div>
       </div>
-
       <div class="skill-category">
-        <h3>Data & Design</h3>
-        <ul>
-          <li>SQL / Data Analysis</li>
-          <li>Tableau / Looker</li>
-          <li>Figma / Wireframing</li>
-          <li>User Research</li>
-          <li>A/B Testing</li>
-          <li>Metrics & KPIs</li>
-        </ul>
+        <div class="skill-cat-label">Tools &amp; Tech</div>
+        <div class="skill-tags">
+          <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">Jira</div></div>
+          <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">Notion</div></div>
+          <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">Figma</div></div>
+          <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">SQL</div></div>
+          <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">AI Workflows</div></div>
+        </div>
       </div>
-
-      <div class="skill-category">
-        <h3>Soft Skills</h3>
-        <ul>
-          <li>Communication</li>
-          <li>Negotiation</li>
-          <li>Problem Solving</li>
-          <li>Critical Thinking</li>
-          <li>Adaptability</li>
-          <li>Leadership</li>
-        </ul>
-      </div>
-
-      <div class="skill-category">
-        <h3>Languages</h3>
-        <div class="languages">
-          <div class="language-item">
-            <span>Arabic</span>
-            <span>Native</span>
-          </div>
-          <div class="language-item">
-            <span>English</span>
-            <span>C2 · Proficient</span>
-          </div>
-          <div class="language-item">
-            <span>Russian</span>
-            <span>C2 · Proficient</span>
-          </div>
-          <div class="language-item">
-            <span>Chinese</span>
-            <span>A1 · Beginner</span>
-          </div>
+    </div>
+    <div>
+      <div class="section-label">Languages</div>
+      <div class="lang-list">
+        <div class="lang-item">
+          <span class="lang-name">Arabic</span>
+          <span class="lang-level">Native</span>
+        </div>
+        <div class="lang-item">
+          <span class="lang-name">English</span>
+          <span class="lang-level">Fluent</span>
+        </div>
+        <div class="lang-item">
+          <span class="lang-name">Russian</span>
+          <span class="lang-level">Fluent</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Education -->
-  <section id="education">
-    <h2>Education</h2>
-
-    <div class="education-item">
-      <div class="date">2025 — 2027</div>
-      <h3>MSc Business Informatics, IT Product Management</h3>
-      <p>Moscow Institute of Physics and Technology</p>
-    </div>
-
-    <div class="education-item">
-      <div class="date">2019 — 2023</div>
-      <h3>Bachelor's in Linguistics</h3>
-      <p>Peter the Great St. Petersburg Polytechnic University</p>
-    </div>
-
-    <div class="education-item">
-      <div class="date">2024 — 2025</div>
-      <h3>Professional Training in Data Analytics</h3>
-      <p>Skypro</p>
+  <section class="edu-section reveal">
+    <div class="section-label">Education</div>
+    <div class="edu-grid">
+      <div class="edu-item">
+        <div class="edu-year">2018 — 2022</div>
+        <div>
+          <div class="edu-degree">B.Sc. Information Technology</div>
+          <div class="edu-institution">RUDN University, Moscow</div>
+        </div>
+      </div>
     </div>
   </section>
 
-</div>
+  <section class="contact-section reveal" id="contact">
+    <h2 class="contact-headline">Let's build something<br><em>remarkable</em> together.</h2>
+    <div class="contact-links">
+      <a href="mailto:khalil@example.com" class="glass-contact-card glass">
+        <div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div>
+        <div class="glass-content">
+          <span class="contact-link-label">Email</span>
+          <span class="contact-link-value">khalil@example.com</span>
+        </div>
+      </a>
+      <a href="https://linkedin.com/in/khalil-sharaf" target="_blank" class="glass-contact-card glass">
+        <div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div>
+        <div class="glass-content">
+          <span class="contact-link-label">LinkedIn</span>
+          <span class="contact-link-value">khalil-sharaf</span>
+        </div>
+      </a>
+      <a href="https://t.me/khalilsharaf" target="_blank" class="glass-contact-card glass">
+        <div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div>
+        <div class="glass-content">
+          <span class="contact-link-label">Telegram</span>
+          <span class="contact-link-value">@khalilsharaf</span>
+        </div>
+      </a>
+    </div>
+  </section>
 
-<!-- Footer -->
+</main>
+
 <footer>
-  <p>© 2026 Khalil Sharaf · Built with care</p>
+  <span class="footer-name">Khalil Sharaf</span>
+  <span class="footer-year">2026</span>
 </footer>
 
+<script>
+// ── SCROLL REVEAL ──
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.1 });
+reveals.forEach(el => observer.observe(el));
+
+// ── HERO SHADER (WebGL) ──
+(function(){
+  const canvas = document.getElementById('shader-canvas');
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const vs = `attribute vec2 p; void main(){gl_Position=vec4(p,0.,1.);}`;
+  const fs = `
+    precision mediump float;
+    uniform float t;
+    uniform vec2 res;
+    void main(){
+      vec2 uv=(gl_FragCoord.xy/res)-.5;
+      uv.x*=res.x/res.y;
+      float d=length(uv);
+      float a=atan(uv.y,uv.x);
+      float wave=sin(d*12.-t*1.4+a*3.)*.5+.5;
+      float wave2=sin(d*8.+t*.9-a*2.)*.5+.5;
+      vec3 c1=vec3(.784,.663,.431);
+      vec3 c2=vec3(.431,.620,.784);
+      vec3 c3=vec3(.08,.08,.08);
+      float m=smoothstep(.0,.6,d);
+      vec3 col=mix(mix(c1,c2,wave),c3,m*wave2);
+      gl_FragColor=vec4(col,1.);
+    }
+  `;
+
+  function compile(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+
+  const prog = gl.createProgram();
+  gl.attachShader(prog, compile(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+
+  const aPos = gl.getAttribLocation(prog, 'p');
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+  const uT = gl.getUniformLocation(prog, 't');
+  const uR = gl.getUniformLocation(prog, 'res');
+
+  let start = performance.now();
+  function frame() {
+    const t = (performance.now() - start) / 1000;
+    gl.uniform1f(uT, t);
+    gl.uniform2f(uR, canvas.width, canvas.height);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
 </body>
 </html>
