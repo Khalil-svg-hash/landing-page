@@ -29,8 +29,10 @@ body {
   overflow-x: hidden;
 }
 
+/* GLASS SVG FILTER */
 .glass-filter-container { display: none; }
 
+/* GLASS BASE */
 .glass {
   position: relative;
   overflow: hidden;
@@ -62,6 +64,7 @@ body {
   position: relative; z-index: 3;
 }
 
+/* FLOATING NAV */
 .nav-bar {
   position: fixed;
   top: 1.5rem;
@@ -119,6 +122,7 @@ body {
   background: var(--border);
 }
 
+/* HERO */
 #hero {
   position: relative;
   height: 100vh;
@@ -275,7 +279,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 8vw; }
   padding-left: 1.2rem; position: relative; line-height: 1.6;
 }
 .exp-bullets li::before {
-  content: '→'; position: absolute; left: 0;
+  content: 'rarr;'; position: absolute; left: 0;
   color: var(--accent); font-size: 0.75rem; opacity: 0.7;
 }
 
@@ -370,65 +374,6 @@ footer {
 .reveal { opacity:0; transform:translateY(22px); transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1); }
 .reveal.visible { opacity:1; transform:translateY(0); }
 
-.slider-section {
-  padding: 5vh 0;
-  border-bottom: 1px solid var(--border);
-  overflow: hidden;
-}
-.slider-label {
-  font-family: 'Fira Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--muted);
-  text-align: center;
-  margin-bottom: 2.5rem;
-}
-.slider-track-outer {
-  overflow: hidden;
-  width: 100%;
-  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
-  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
-}
-.slider-track {
-  display: flex;
-  width: max-content;
-  gap: 4rem;
-  align-items: center;
-  animation: sliderScroll 28s linear infinite;
-}
-.slider-track:hover { animation-play-state: paused; }
-@keyframes sliderScroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-.slider-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.8rem;
-  flex-shrink: 0;
-  opacity: 0.6;
-  transition: opacity 0.3s;
-  cursor: default;
-}
-.slider-item:hover { opacity: 1; }
-.slider-item img {
-  height: 48px;
-  width: auto;
-  max-width: 120px;
-  object-fit: contain;
-  filter: grayscale(100%) brightness(1.8);
-  transition: filter 0.3s;
-}
-.slider-item:hover img { filter: grayscale(0%) brightness(1); }
-.slider-item-name {
-  font-family: 'Fira Mono', monospace;
-  font-size: 0.55rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
 .kareta-badge {
   display: inline-flex;
   align-items: center;
@@ -451,16 +396,56 @@ footer {
 }
 @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
 
-@media (max-width: 768px) {
-  .about-strip, .skills-section { grid-template-columns: 1fr; gap: 2.5rem; }
-  .exp-item, .edu-item { grid-template-columns: 1fr; gap: 0.5rem; }
-  .hero-content { flex-direction: column; align-items: flex-start; gap: 1rem; }
-  .nav-inner { gap: 0; }
-  .nav-link { padding: 0.4rem 0.5rem; font-size: 0.55rem; }
-  footer { flex-direction: column; gap: 0.5rem; }
-  .contact-links { gap: 1rem; }
-  .glass-contact-card { min-width: 140px; }
+@media (max-width: 900px) {
+  main { padding: 0 5vw; }
+  .about-strip { grid-template-columns: 200px 1fr; gap: 2.5rem; }
+  .photo-wrap, .photo-wrap img { width: 200px; max-width: 200px; }
+  .exp-item, .edu-item { grid-template-columns: 140px 1fr; gap: 1.5rem; }
 }
+
+@media (max-width: 680px) {
+  body { font-size: 16px; }
+  .nav-bar { top: 0.75rem; width: 96vw; border-radius: 1rem; }
+  .nav-bar .glass-blur, .nav-bar .glass-shine { border-radius: 1rem; }
+  .nav-inner { padding: 0.45rem 0.5rem; gap: 0; justify-content: center; flex-wrap: wrap; }
+  .nav-link { padding: 0.35rem 0.5rem; font-size: 0.5rem; letter-spacing: 0.1em; }
+  .nav-dot { display: none; }
+  #hero { min-height: 100svh; }
+  .hero-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 0 5vw 6vh;
+  }
+  .hero-name { font-size: clamp(2.6rem, 13vw, 4.5rem); }
+  .hero-badge .glass-content { padding: 1rem 1.25rem; text-align: left; }
+  main { padding: 0 5vw; }
+  .about-strip {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 6vh 0 4vh;
+  }
+  .photo-wrap { width: 100%; max-width: 280px; margin: 0 auto; }
+  .photo-wrap img { width: 100%; max-width: 100%; aspect-ratio: 3/4; }
+  .photo-frame { inset: 8px -8px -8px 8px; }
+  .about-text { padding-top: 0; }
+  .about-lead { font-size: clamp(1.05rem, 4.5vw, 1.3rem); }
+  .exp-item {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+    padding: 1.75rem 0;
+  }
+  .exp-meta { margin-bottom: 0.25rem; }
+  .exp-role { font-size: 1.15rem; margin-top: 0.3rem; }
+  .skills-section { grid-template-columns: 1fr; gap: 2.5rem; }
+  .edu-item { grid-template-columns: 1fr; gap: 0.4rem; padding: 1.5rem 0; }
+  .contact-headline { font-size: clamp(1.6rem, 8vw, 2.5rem); margin-bottom: 2.5rem; }
+  .contact-links { gap: 0.75rem; flex-direction: column; align-items: center; }
+  .glass-contact-card { min-width: 240px; width: 100%; max-width: 320px; }
+  .glass-contact-card .glass-content { padding: 1.25rem 1.5rem; }
+  footer { flex-direction: column; gap: 0.4rem; text-align: center; padding: 1.5rem 5vw; }
+  .scroll-hint { display: none; }
+}  
 </style>
 </head>
 <body>
@@ -531,89 +516,34 @@ footer {
 
   <div class="about-strip reveal" id="about">
     <div class="photo-wrap">
-      <img src="https://avatars.githubusercontent.com/u/Khalil-svg-hash" alt="Khalil Sharaf" />
+      <img src="" alt="Khalil Sharaf">
       <div class="photo-frame"></div>
     </div>
     <div class="about-text">
       <div class="section-label">About</div>
-      <p class="about-lead">
-        Three years delivering <strong>digital &amp; media products</strong> at the intersection of technology, content, and analytics.
-      </p>
-      <p class="about-body">
-        I operate where technical requirements meet creative execution — coordinating cross-functional teams, defining product roadmaps, and integrating AI-driven workflows that compress timelines without sacrificing quality. Native Arabic, fluent in English and Russian; I bridge cultures as naturally as I bridge departments.
-      </p>
-    </div>
-  </div>
-
-  <div class="slider-section reveal">
-    <p class="slider-label">Companies &amp; Partners</p>
-    <div class="slider-track-outer">
-      <div class="slider-track">
-        <div class="slider-item">
-          <span class="slider-item-name">Yandex</span>
-        </div>
-        <div class="slider-item">
-          <span class="slider-item-name">Kareta</span>
-        </div>
-        <div class="slider-item">
-          <span class="slider-item-name">Partner 3</span>
-        </div>
-        <div class="slider-item">
-          <span class="slider-item-name">Partner 4</span>
-        </div>
-        <!-- duplicate for infinite loop -->
-        <div class="slider-item">
-          <span class="slider-item-name">Yandex</span>
-        </div>
-        <div class="slider-item">
-          <span class="slider-item-name">Kareta</span>
-        </div>
-        <div class="slider-item">
-          <span class="slider-item-name">Partner 3</span>
-        </div>
-        <div class="slider-item">
-          <span class="slider-item-name">Partner 4</span>
-        </div>
-      </div>
+      <p class="about-lead">Results-driven <strong>Project Manager</strong> with a track record of delivering complex initiatives on time.</p>
+      <p class="about-body">Experienced in coordinating cross-functional teams, managing stakeholder expectations, and driving continuous improvement across digital and operational projects.</p>
     </div>
   </div>
 
   <section class="experience-section reveal" id="experience">
     <div class="section-label">Experience</div>
     <div class="exp-grid">
-
       <div class="exp-item">
-        <div>
+        <div class="exp-meta">
           <div class="exp-company">Kareta</div>
-          <div class="exp-period">2023 — Present</div>
-          <div class="kareta-badge"><span class="kareta-dot"></span> Current</div>
+          <div class="exp-period">2022 — Present</div>
         </div>
         <div>
-          <div class="exp-role">Project Manager, Digital Products</div>
+          <div class="exp-role">Senior Project Manager</div>
           <ul class="exp-bullets">
-            <li>Led end-to-end delivery of a multi-platform media suite, reducing time-to-market by 30%.</li>
-            <li>Defined and maintained the product roadmap across engineering, design, and content teams.</li>
-            <li>Implemented AI-assisted content workflows, cutting production cycles by 40%.</li>
-            <li>Coordinated a 12-person cross-functional team using Agile/Scrum methodologies.</li>
+            <li>Led end-to-end delivery of multiple product streams simultaneously</li>
+            <li>Implemented agile ceremonies improving team velocity by 30%</li>
+            <li>Managed stakeholder communications across 3 time zones</li>
           </ul>
+          <span class="kareta-badge"><span class="kareta-dot"></span>Current Role</span>
         </div>
       </div>
-
-      <div class="exp-item">
-        <div>
-          <div class="exp-company">Yandex</div>
-          <div class="exp-period">2021 — 2023</div>
-        </div>
-        <div>
-          <div class="exp-role">Associate Product Manager</div>
-          <ul class="exp-bullets">
-            <li>Contributed to growth initiatives for a core search product with 50M+ monthly users.</li>
-            <li>Ran A/B experiments that improved key engagement metrics by 18%.</li>
-            <li>Worked with analytics and data science teams to translate insights into product decisions.</li>
-          </ul>
-        </div>
-      </div>
-
     </div>
   </section>
 
@@ -621,41 +551,30 @@ footer {
     <div>
       <div class="section-label">Skills</div>
       <div class="skill-category">
-        <div class="skill-cat-label">Product &amp; Delivery</div>
+        <div class="skill-cat-label">Project Management</div>
         <div class="skill-tags">
           <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">Agile / Scrum</div></div>
-          <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">Product Roadmap</div></div>
-          <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">A/B Testing</div></div>
-          <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">OKRs / KPIs</div></div>
-          <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">Stakeholder Mgmt</div></div>
+          <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">Roadmapping</div></div>
+          <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">Risk Management</div></div>
+          <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">Stakeholder Comms</div></div>
         </div>
       </div>
       <div class="skill-category">
-        <div class="skill-cat-label">Tools &amp; Tech</div>
+        <div class="skill-cat-label">Tools</div>
         <div class="skill-tags">
           <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">Jira</div></div>
+          <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">Confluence</div></div>
           <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">Notion</div></div>
           <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">Figma</div></div>
-          <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">SQL</div></div>
-          <div class="glass-tag glass"><div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div><div class="glass-content">AI Workflows</div></div>
         </div>
       </div>
     </div>
     <div>
       <div class="section-label">Languages</div>
       <div class="lang-list">
-        <div class="lang-item">
-          <span class="lang-name">Arabic</span>
-          <span class="lang-level">Native</span>
-        </div>
-        <div class="lang-item">
-          <span class="lang-name">English</span>
-          <span class="lang-level">Fluent</span>
-        </div>
-        <div class="lang-item">
-          <span class="lang-name">Russian</span>
-          <span class="lang-level">Fluent</span>
-        </div>
+        <div class="lang-item"><span class="lang-name">Arabic</span><span class="lang-level">Native</span></div>
+        <div class="lang-item"><span class="lang-name">English</span><span class="lang-level">Fluent</span></div>
+        <div class="lang-item"><span class="lang-name">Russian</span><span class="lang-level">Intermediate</span></div>
       </div>
     </div>
   </section>
@@ -666,15 +585,15 @@ footer {
       <div class="edu-item">
         <div class="edu-year">2018 — 2022</div>
         <div>
-          <div class="edu-degree">B.Sc. Information Technology</div>
-          <div class="edu-institution">RUDN University, Moscow</div>
+          <div class="edu-degree">Bachelor of Business Administration</div>
+          <div class="edu-institution">University Name</div>
         </div>
       </div>
     </div>
   </section>
 
   <section class="contact-section reveal" id="contact">
-    <h2 class="contact-headline">Let's build something<br><em>remarkable</em> together.</h2>
+    <h2 class="contact-headline">Let's work <em>together</em></h2>
     <div class="contact-links">
       <a href="mailto:khalil@example.com" class="glass-contact-card glass">
         <div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div>
@@ -683,18 +602,11 @@ footer {
           <span class="contact-link-value">khalil@example.com</span>
         </div>
       </a>
-      <a href="https://linkedin.com/in/khalil-sharaf" target="_blank" class="glass-contact-card glass">
+      <a href="https://linkedin.com/in/khalil" class="glass-contact-card glass" target="_blank">
         <div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div>
         <div class="glass-content">
           <span class="contact-link-label">LinkedIn</span>
-          <span class="contact-link-value">khalil-sharaf</span>
-        </div>
-      </a>
-      <a href="https://t.me/khalilsharaf" target="_blank" class="glass-contact-card glass">
-        <div class="glass-blur"></div><div class="glass-tint"></div><div class="glass-shine"></div>
-        <div class="glass-content">
-          <span class="contact-link-label">Telegram</span>
-          <span class="contact-link-value">@khalilsharaf</span>
+          <span class="contact-link-value">linkedin.com/in/khalil</span>
         </div>
       </a>
     </div>
@@ -708,82 +620,40 @@ footer {
 </footer>
 
 <script>
-// ── SCROLL REVEAL ──
 const reveals = document.querySelectorAll('.reveal');
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
 }, { threshold: 0.1 });
 reveals.forEach(el => observer.observe(el));
 
-// ── HERO SHADER (WebGL) ──
-(function(){
-  const canvas = document.getElementById('shader-canvas');
-  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-  if (!gl) return;
-
-  function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-  }
-  window.addEventListener('resize', resize);
-  resize();
-
-  const vs = `attribute vec2 p; void main(){gl_Position=vec4(p,0.,1.);}`;
-  const fs = `
-    precision mediump float;
-    uniform float t;
-    uniform vec2 res;
+const canvas = document.getElementById('shader-canvas');
+const gl = canvas.getContext('webgl');
+if (gl) {
+  const resize = () => { canvas.width = innerWidth; canvas.height = innerHeight; gl.viewport(0,0,canvas.width,canvas.height); };
+  resize(); window.addEventListener('resize', resize);
+  const vert = `attribute vec2 p; void main(){gl_Position=vec4(p,0,1);}`;
+  const frag = `precision mediump float;
+    uniform vec2 u_res; uniform float u_t;
     void main(){
-      vec2 uv=(gl_FragCoord.xy/res)-.5;
-      uv.x*=res.x/res.y;
-      float d=length(uv);
-      float a=atan(uv.y,uv.x);
-      float wave=sin(d*12.-t*1.4+a*3.)*.5+.5;
-      float wave2=sin(d*8.+t*.9-a*2.)*.5+.5;
-      vec3 c1=vec3(.784,.663,.431);
-      vec3 c2=vec3(.431,.620,.784);
-      vec3 c3=vec3(.08,.08,.08);
-      float m=smoothstep(.0,.6,d);
-      vec3 col=mix(mix(c1,c2,wave),c3,m*wave2);
-      gl_FragColor=vec4(col,1.);
-    }
-  `;
-
-  function compile(type, src) {
-    const s = gl.createShader(type);
-    gl.shaderSource(s, src);
-    gl.compileShader(s);
-    return s;
-  }
-
-  const prog = gl.createProgram();
-  gl.attachShader(prog, compile(gl.VERTEX_SHADER, vs));
-  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, fs));
-  gl.linkProgram(prog);
-  gl.useProgram(prog);
-
-  const buf = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
-
-  const aPos = gl.getAttribLocation(prog, 'p');
-  gl.enableVertexAttribArray(aPos);
-  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
-
-  const uT = gl.getUniformLocation(prog, 't');
-  const uR = gl.getUniformLocation(prog, 'res');
-
-  let start = performance.now();
-  function frame() {
-    const t = (performance.now() - start) / 1000;
-    gl.uniform1f(uT, t);
-    gl.uniform2f(uR, canvas.width, canvas.height);
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-    requestAnimationFrame(frame);
-  }
-  frame();
-})();
+      vec2 uv=gl_FragCoord.xy/u_res;
+      float n=sin(uv.x*4.+u_t*.4)*sin(uv.y*3.+u_t*.3)*.5+.5;
+      float n2=sin((uv.x+uv.y)*6.+u_t*.5)*.25+.75;
+      vec3 a=vec3(0.09,0.07,0.05), b=vec3(0.22,0.17,0.10), c=vec3(0.05,0.08,0.14);
+      vec3 col=mix(mix(a,b,n),c,n2*.4);
+      gl_FragColor=vec4(col,1);
+    }`;
+  const vs=gl.createShader(gl.VERTEX_SHADER); gl.shaderSource(vs,vert); gl.compileShader(vs);
+  const fs=gl.createShader(gl.FRAGMENT_SHADER); gl.shaderSource(fs,frag); gl.compileShader(fs);
+  const prog=gl.createProgram(); gl.attachShader(prog,vs); gl.attachShader(prog,fs); gl.linkProgram(prog); gl.useProgram(prog);
+  const buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+  const loc=gl.getAttribLocation(prog,'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+  const uRes=gl.getUniformLocation(prog,'u_res'), uT=gl.getUniformLocation(prog,'u_t');
+  let t=0;
+  (function loop(){ t+=.016; gl.uniform2f(uRes,canvas.width,canvas.height); gl.uniform1f(uT,t); gl.drawArrays(gl.TRIANGLE_STRIP,0,4); requestAnimationFrame(loop); })();
+}
 </script>
 </body>
 </html>
